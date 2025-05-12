@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>図書館管理システム</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg bg-light border-bottom">
+        <div class="container">
+            <a class="navbar-brand text-dark" href="/">図書館管理システム</a>
+            <div class="collapse navbar-collapse justify-content-end">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <button class="btn btn-outline-primary me-2" th:onclick="location.href='@{/login}'">ログイン</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-outline-primary" th:onclick="location.href='@{/register}'">登録</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h1 class="text-center mb-4">一覧</h1>
+    <!-- Bootstrap CSS -->
+    <link 
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" 
+        rel="stylesheet"
+    >
+</head>
+<body>
+    <div class="container mt-4">
+        <h1 class="text-center mb-4">図書館管理システム</h1>
+
+        <!-- Search Box -->
+        <form method="get" th:action="@{/books}" class="mb-4">
+            <div class="input-group">
+                <input type="text" class="form-control" name="keyword" placeholder="タイトルで検索" th:value="${keyword}">
+
+                <button class="btn btn-primary" type="submit">検索</button>
+            </div>
+        </form>
+
+        <!-- Book List Table -->
+        <table class="table table-striped table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>タイトル</th>
+                    <th>作家</th>
+                    <th>年</th>
+                    <th>ジャンル</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="book : ${books}">
+                    <td th:text="${book.id}"></td>
+                    <td>
+                        <a th:href="@{/book/details/{id}(id=${book.id})}" 
+                           th:text="${book.title}">
+                        </a>
+                    </td>
+
+                    <td th:text="${book.author}"></td>
+                    <td th:text="${book.year}"></td>
+                    <td th:text="${book.genre}"></td>
+                    <td>
+                        <!-- Edit Button -->
+
+                        <a th:href="@{/books/edit/{id}(id=${book.id})}" class="btn btn-primary btn-sm" style="display: inline-block;">編集</a>
+                       &nbsp;&nbsp;
+                        <!-- Delete Button -->
+                        <form th:action="@{/books/delete/{id}(id=${book.id})}" 
+                              method="post" style="display:inline;">
+                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                            
+                             <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('本当に削除しますか？');">削除</button>
+
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <!-- Register Button -->
+        <div class="text-end mt-3">
+            <a href="/books/register" class="btn btn-success">新規作成</a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Bootstrap JS (optional, for interactive features) -->
+    <script 
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js">
+    </script>
+
+    <script src="/js/delete_confirmation.js"></script>
+</body>
+</html>
